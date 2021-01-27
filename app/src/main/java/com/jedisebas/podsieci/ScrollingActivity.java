@@ -296,13 +296,28 @@ public class ScrollingActivity extends AppCompatActivity {
         int amm;
         try {
             ip = new AdresIP(adres.getText().toString().trim());
-        } catch (Exception e) { ip = new AdresIP("192.168.1.10"); adres.setText("192.168.1.10");}
+        } catch (Exception e) { ip = new AdresIP("192.168.1.10"); adres.setText("192.168.1.10");
+            Snackbar.make(view, "Błędny adres IP", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();}
         try {
             mc = new Maska(masc.getText().toString().trim());
-        } catch (Exception e) { mc = new Maska("/25"); masc.setText("/25");}
+        } catch (Exception e) { mc = new Maska("/25"); masc.setText("/25");
+            Snackbar.make(view, "Błędna maska", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();}
         try {
             amm = Integer.parseInt(divi.getText().toString().trim());
-        } catch (NumberFormatException e) { divi.setText("1"); amm = 1; }
+        } catch (NumberFormatException e) { divi.setText("1"); amm = 1;
+            Snackbar.make(view, "Nie podano ilości podsieci lub nic nie podano", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();}
+
+        if (mc.ones_amount + amm > 32) {
+            mc = new Maska("/25");
+            masc.setText("/25");
+            divi.setText("1");
+            amm = 1;
+            Snackbar.make(view, "Zbyt duża maska lub ilość sieci do podzielenia", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
 
         division(amm, ip, mc);
 
